@@ -1,7 +1,12 @@
 #---------root/variables.tf-----------
 
+variable "region" {
+  
+}
+
+
 variable "ami" {
-    default = "ami-0042c75bb13991538"
+    type    = map(string)
 }
 
 variable "hostname" {
@@ -22,6 +27,9 @@ variable "key_name" {
     default = "moon-east"
 }
 
+variable "security_groups" {
+    type    = map(list(string))
+} 
 
 variable "subnet_id" {
     default = "subnet-c80e87e7"

@@ -1,31 +1,39 @@
 #---------root/main.tf-----------
 
+# PROVIDER - Include in ALL
 provider "aws" {
     profile = "default"
-    region  = "us-east-1"
+    region  = var.region
 }
 
+
+# RESOURCE - Include in ALL EC2
 resource "aws_instance" "moon_server" {
-    ami                     = var.ami
+    ami                     = lookup(var.ami, var.region)
     iam_instance_profile    = var.iam_instance_profile
     instance_type           = var.instance_type
     key_name                = var.key_name
-    security_groups = [
-        "sg-d7ad66a0"
-    ]
-    subnet_id       = var.subnet_id
+    vpc_security_group_ids  = lookup(var.security_groups, var.region)
+    # subnet_id       = var.subnet_id
 
     tags = {
-        Name        = "Moon-Server-01"
+        Name        = var.hostname
     }
 
     root_block_device {
         encrypted   = true
     }
-
+#   Optional
     ebs_block_device {
         device_name = "/dev/xvdb"
         encrypted   = true
         volume_size = 16
     }
 }
+
+# SUB-RESOURCE - Include in EC2 with Public Subnet/EIP
+resource "aws_eip" "public_ip" {
+    vpc         = true
+    instance    = aws_instance.moon_server.id
+}
+
