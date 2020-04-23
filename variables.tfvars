@@ -1,15 +1,30 @@
+# build notes
+# vpc                 = "vpc-06db524c77128c292"
+
+# account specific
+region              = "us-east-2"
+availability_zone   = "us-east-2b"
+
 ami = {
-    "us-east-1" = "ami-0042c75bb13991538"
-    "us-east-2" = "ami-0e8d1a9b450baa691"
-    "us-west-2" = "ami-04c29899aa9bf924a"
+    "ubuntu16"  = "ami-0564dd36709a7a5b2"
+    "ubuntu18"  = "ami-0e8d1a9b450baa691"
+    "suse"      = "ami-0eb964f1cd28eb94d"
 }
+
+subnets_private = {
+    "us-east-2a"    = "subnet-09fad3f8b283a63ef"
+    "us-east-2b"    = "subnet-0e0cc0412cd1417c7"
+    "us-east-2c"    = "subnet-070bc9c800825dbd2"
+}
+subnets_public = {
+    "us-east-2a"    = "subnet-0ca766e0aba0bb36e"
+    "us-east-2b"    = "subnet-0947b6bebe5425ec2"
+    "us-east-2c"    = "subnet-08b783efe3bfed00e"   
+}
+# build specific
+
 hostname        = "moon-example-2"
 instance_type   = "t2.micro"
-key_name        = "moon-east"
-region          = "us-east-1"
-security_groups = {
-    "us-east-1" = ["sg-f6ff3482",]
-    "us-east-2" = ["sg-044dbdc57f842cb04",]
-    "us-west-2" = ["sg-96cb9df1",]
-}
-# subnet_id       = "subnet-1ab2e551"
+key_name        = "moon-cb-ohio"
+os              = "suse"
+security_groups = ["sg-044dbdc57f842cb04",]

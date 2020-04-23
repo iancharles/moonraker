@@ -4,6 +4,9 @@ variable "region" {
   
 }
 
+variable availability_zone {
+}
+
 
 variable "ami" {
     type    = map(string)
@@ -27,10 +30,18 @@ variable "key_name" {
     default = "moon-east"
 }
 
+variable "os" {
+    default = "ubuntu18"
+}
+
 variable "security_groups" {
-    type    = map(list(string))
+    type    = list
 } 
 
-variable "subnet_id" {
-    default = "subnet-c80e87e7"
+variable "subnets_private" {
+    type    = map(string)
+}
+
+variable "subnets_public" {
+    type    = map(string)
 }

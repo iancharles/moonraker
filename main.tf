@@ -9,12 +9,12 @@ provider "aws" {
 
 # RESOURCE - Include in ALL EC2
 resource "aws_instance" "moon_server" {
-    ami                     = lookup(var.ami, var.region)
+    ami                     = lookup(var.ami, var.os)
     iam_instance_profile    = var.iam_instance_profile
     instance_type           = var.instance_type
     key_name                = var.key_name
-    vpc_security_group_ids  = lookup(var.security_groups, var.region)
-    # subnet_id       = var.subnet_id
+    vpc_security_group_ids  = var.security_groups
+    subnet_id               = lookup(var.subnets_public, var.availability_zone)
 
     tags = {
         Name        = var.hostname
