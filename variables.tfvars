@@ -3,7 +3,6 @@
 
 # account specific
 region              = "us-east-2"
-availability_zone   = "us-east-2b"
 
 ami = {
     "ubuntu16"  = "ami-0564dd36709a7a5b2"
@@ -23,8 +22,13 @@ subnets_public = {
 }
 # build specific
 
-hostname        = "moon-example-2"
-instance_type   = "t2.micro"
-key_name        = "moon-cb-ohio"
-os              = "suse"
-security_groups = ["sg-044dbdc57f842cb04",]
+availability_zone       = "us-east-2b"
+
+iam_instance_profile    = "EC2-S3-Access"
+instance_type           = "t2.micro"
+key_name                = "moon-cb-ohio"
+os                      = "suse"
+security_groups         = ["sg-044dbdc57f842cb04",]
+
+# instance specific
+hostname    = "moon-example-2"

@@ -1,0 +1,19 @@
+# build notes
+# vpc                 = "vpc-06db524c77128c292"
+
+# account specific
+region              = "us-east-2"
+availability_zone   = "us-east-2b"
+
+ami = {
+	'ubuntu18'	=  'ami-0042c75bb13991538'
+	'suse'	=  'ami-07649adafc3374b17'
+}
+subnets_public = {
+	'us-east-1a'	= 'subnet-1ab2e551'
+	'us-east-1b'	= 'subnet-3aab2667'
+}
+subnets_private = {
+	'us-east-1d'	= 'subnet-c80e87e7'
+	'us-east-1c'	= 'subnet-06501962'
+}
