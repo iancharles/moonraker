@@ -1,5 +1,6 @@
 import boto3
 import collections
+from json import dumps
 
 def get_sgs(vpc, region_nm, profile_nm, file_name):
 
@@ -39,19 +40,9 @@ def get_sgs(vpc, region_nm, profile_nm, file_name):
         print("Choose from Available Security Groups:\n")
         for item in available_sgs['SecurityGroups']:
             if input(f"{item['GroupName']} - {item['Description']} [y/N]: ").lower() == 'y':
-                selected_security_groups.append(item['GroupId'])
+                selected_security_groups.append(item["GroupId"])
+        
+        security_groups = dumps(selected_security_groups)
 
         print("")
-        print(f"security_groups\t= '{selected_security_groups}", file=file)
-
-
-        # for subnet in available_sgs['Subnets']:
-        #     subnet_dict['SecurityGroups']['Description'][subnet['AvailabilityZone']]["Public"] = subnet['SubnetId']
-
-        # # The final printer
-        # for key in subnet_dict:
-        #     for key_two in subnet_dict[key]:
-        #         for key_three in subnet_dict[key][key_two]:
-        #             for key_four in subnet_dict[key][key_two][key_three]:
-        #                 print(f"\t'{key_three}'\t= '{subnet_dict[key][key_two][key_three][key_four]}'")
-        # print("}")
+        print(f'security_groups\t= {security_groups}', file=file)

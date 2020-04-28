@@ -5,8 +5,9 @@ from amiget import get_amis
 from sg_get import get_sgs
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-v', '--vpc', help="VPC to get vars")
 parser.add_argument('-r', '--region', help="region of VPC")
+parser.add_argument('-v', '--vpc', help="VPC to get vars")
+parser.add_argument('--os', help="operating system")
 parser.add_argument('--profile', help="AWS CLI Profile")
 parser.add_argument('--public', help="Public or Private Subnet (Default is Private)")
 args = parser.parse_args()
@@ -14,26 +15,20 @@ args = parser.parse_args()
 profile_nm = args.profile
 region_nm = args.region
 vpc = args.vpc
+os = args.os
+
 if args.public:
     public = True
 else:
     public = False
-file_name = 'moon-lander-4.yml'
-# region has to come after vpc defined
-
-
-
-intro = """
-# account specific
-"""
-
+file_name = 'moon-lander-vars.tfvars'
 
 intro_file = open(file_name, 'w')
 print("#Build Notes:", file=intro_file)
 print("#------------", file=intro_file)
 print(f"# for VPC: '{vpc}'\n", file=intro_file)
 print(f"# vpc specific", file=intro_file)
-print(f"region\t= {region_nm}", file=intro_file)
+print(f'region\t= "{region_nm}"', file=intro_file)
 intro_file.close()
 
 
@@ -46,7 +41,8 @@ az_raw = input("Specify availability zone (Optional) ") or "a"
 intro_file = open(file_name, 'r+')
 intro_file.read()
 print(f"# instance specific", file=intro_file)
-print(f"availability_zone\t= '{region_nm}{az_raw}'", file=intro_file)
+print(f'availability_zone\t= "{region_nm}{az_raw}"', file=intro_file)
+print(f'os\t\t= "{os}"', file=intro_file)
 intro_file.close()
 
 get_sgs(vpc, region_nm, profile_nm, file_name)
