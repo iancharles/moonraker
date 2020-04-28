@@ -1,4 +1,5 @@
-#---------root/main.tf-----------
+#### BEGIN DEFAULT TEMPLATE
+#---------moon/main.tf-----------
 
 # PROVIDER - Include in ALL
 provider "aws" {
@@ -7,8 +8,8 @@ provider "aws" {
 }
 
 
-# 10 - RESOURCE - Include in ALL EC2
-resource "aws_instance" "moon_server" {
+# 11 - RESOURCE - Include in ALL EC2
+resource "aws_instance" "moon_node" {
     ami                     = lookup(var.ami, var.os)
     iam_instance_profile    = var.iam_instance_profile
     instance_type           = var.instance_type
@@ -20,21 +21,13 @@ resource "aws_instance" "moon_server" {
         Name        = var.hostname
     }
 
-    # 23 - Root EBS Volume
+    # 24 - Root EBS Volume
     root_block_device {
         encrypted   = true
     }
-#   27 - Optional - EBS Block Device
-    ebs_block_device {
-        device_name = "/dev/xvdb"
-        encrypted   = true
-        volume_size = 16
-    }
-}
+    #### END DEFAULT TEMPLATE
 
-# 35 - SUB-RESOURCE - Include in EC2 with Public Subnet/EIP
-resource "aws_eip" "public_ip" {
-    vpc         = true
-    instance    = aws_instance.moon_server.id
-}
+    #### BEGIN MOONRAKER-GENERATED VALUES
 
+
+}
