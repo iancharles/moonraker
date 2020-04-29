@@ -20,6 +20,8 @@ profile_nm = args.profile
 region_nm = args.region
 vpc = args.vpc
 os = args.os
+#temp
+moon_node_nos = [1, 2, 3, 4, 5]
 
 if args.network == 'public':
     public = True
@@ -58,3 +60,11 @@ intro_file.close()
 
 get_sgs(vpc, region_nm, profile_nm, file_tfvars)
 add_block_device()
+
+if public:
+    with open('moon-lander-main.tf', 'r+') as file:
+        file.read()
+        print('resource "aws_eip" "public_ip" {', file=file)
+        print('\tvpc\t= true', file=file)
+        print('\tinstance\t= aws_instance.moon_node.id', file=file)
+        print("}", file=file)
