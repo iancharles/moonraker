@@ -13,5 +13,8 @@ def add_block_device():
             print("\t\tencrypted   = true", file=file)
             print(f"\t\tvolume_size = {size}", file=file)
             print("\t}", file=file)
-            print("}", file=file)
+    
+    with open('moon-lander-main.tf', 'r+') as file:
+        file.read()
+        print("}", file=file)
 

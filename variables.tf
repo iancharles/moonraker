@@ -8,18 +8,14 @@ variable "ami" {
 }
 
 
-variable "subnets_private" {
-    type    = map(string)
-}
-
-variable "subnets_public" {
-    type    = map(string)
-}
 
 
 # Per build
 variable "availability_zone" {}
 
+variable "subnet_id" {
+    type    = map(string)
+}
 
 variable "iam_instance_profile" {}
 

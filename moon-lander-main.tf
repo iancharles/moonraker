@@ -1,4 +1,4 @@
-#### BEGIN DEFAULT TEMPLATE
+## BEGIN DEFAULT TEMPLATE
 #---------moon/main.tf-----------
 
 # PROVIDER - Include in ALL
@@ -29,3 +29,16 @@ resource "aws_instance" "moon_node" {
 
     #### BEGIN MOONRAKER-GENERATED VALUES
 
+#   27 - Optional - EBS Block Device
+	ebs_block_device {
+		device_name = "/dev/xvdb"
+		encrypted   = true
+		volume_size = 24
+	}
+#   27 - Optional - EBS Block Device
+	ebs_block_device {
+		device_name = "/dev/xvdc"
+		encrypted   = true
+		volume_size = 40
+	}
+}
