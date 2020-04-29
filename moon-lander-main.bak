@@ -15,7 +15,7 @@ resource "aws_instance" "moon_node" {
     instance_type           = var.instance_type
     key_name                = var.key_name
     vpc_security_group_ids  = var.security_groups
-    subnet_id               = lookup(var.subnet_id, var.availability_zone)
+    subnet_id               = lookup(var.subnets_public, var.availability_zone)
 
     tags = {
         Name        = var.hostname
