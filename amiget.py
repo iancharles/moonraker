@@ -6,10 +6,6 @@ from dateutil import parser
 
 def get_amis(region_nm, profile_nm, file_name):
 
-
-
-
-
     # Initial setup
     session = boto3.Session(profile_name=profile_nm, region_name=region_nm)
 

@@ -9,6 +9,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-r', '--region', help="region of VPC")
 parser.add_argument('-v', '--vpc', help="VPC to get vars")
 parser.add_argument('-o','--os', help="operating system")
+parser.add_argument('-t','--type', help="instance type (size)")
+parser.add_argument('-z','--zone', help="availability zone")
 parser.add_argument('--hostname', help='name of instance')
 parser.add_argument('--keyname', help='name of keypair')
 parser.add_argument('--role', help='instance iam role')
@@ -28,7 +30,7 @@ if args.network == 'public':
 else:
     public = False
 file_tfvars = 'moon-lander-vars.tfvars'
-file_main   = 'moon-lander-main.tfvars'
+file_main   = 'moon-lander-main.tf'
 
 intro_file = open(file_tfvars, 'w')
 print("#Build Notes:", file=intro_file)
@@ -42,7 +44,7 @@ intro_file.close()
 get_amis(region_nm, profile_nm, file_tfvars)
 get_subnets(vpc, region_nm, profile_nm, file_tfvars, public)
 
-az_raw = input("Specify availability zone (Optional) ") or "a"
+az = args.zone or "a"
 
 # populate vpc-specific values in tfvars
 intro_file = open(file_tfvars, 'r+')
@@ -54,16 +56,19 @@ if args.keyname:
     print(f'key_name\t= "{args.keyname}"', file=intro_file)
 if args.role:
     print(f'iam_instance_profile\t= "{args.role}"', file=intro_file)
-print(f'availability_zone\t= "{region_nm}{az_raw}"', file=intro_file)
+if args.type:
+    print(f'instance_type\t= "{args.type}"', file=intro_file)
+print(f'availability_zone\t= "{region_nm}{az}"', file=intro_file)
 print(f'os\t\t= "{os}"', file=intro_file)
 intro_file.close()
 
 get_sgs(vpc, region_nm, profile_nm, file_tfvars)
 add_block_device()
 
-if public:
-    with open('moon-lander-main.tf', 'r+') as file:
-        file.read()
+with open(file_main, 'r+') as file:
+    file.read()
+    print("}", file=file)
+    if public:
         print('resource "aws_eip" "public_ip" {', file=file)
         print('\tvpc\t= true', file=file)
         print('\tinstance\t= aws_instance.moon_node.id', file=file)
