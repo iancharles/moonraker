@@ -20,6 +20,7 @@ resource "aws_instance" "moon_node" {
     tags = {
         Name        = var.hostname
     }
+    user_data       = file("user_data.sh")
 
     # 24 - Root EBS Volume
     root_block_device {
