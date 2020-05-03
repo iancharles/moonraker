@@ -4,6 +4,8 @@ from subnetget import get_subnets
 from amiget import get_amis
 from sg_get import get_sgs
 from add_block_device import add_block_device
+from userdata_get import get_userdata
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-r', '--region', help="region of VPC")
@@ -29,6 +31,9 @@ if args.network == 'public':
     public = True
 else:
     public = False
+hostname = args.hostname or "moon-server-default"
+timezone = "America/Chicago"
+user = "nv-admin"
 file_tfvars = 'moon-lander-vars.tfvars'
 file_main   = 'moon-lander-main.tf'
 
@@ -43,6 +48,7 @@ intro_file.close()
 
 get_amis(region_nm, profile_nm, file_tfvars)
 get_subnets(vpc, region_nm, profile_nm, file_tfvars, public)
+get_userdata(hostname, timezone, user)
 
 az = args.zone or "a"
 
