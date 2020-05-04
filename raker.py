@@ -18,6 +18,8 @@ parser.add_argument('--keyname', help='name of keypair')
 parser.add_argument('--role', help='instance iam role')
 parser.add_argument('--profile', help="AWS CLI Profile")
 parser.add_argument('--network', help="Public or Private subnet")
+parser.add_argument('--timezone', help='Timezone of instance')
+parser.add_argument('--user', help='default user on instance')
 args = parser.parse_args()
 
 profile_nm = args.profile
@@ -31,9 +33,9 @@ if args.network == 'public':
     public = True
 else:
     public = False
-hostname = args.hostname or "moon-server-default"
-timezone = "America/Chicago"
-user = "nv-admin"
+hostname = args.hostname
+timezone = args.timezone or "America/Chicago"
+user = args.user or "nv-admin"
 file_tfvars = 'moon-lander-vars.tfvars'
 file_main   = 'moon-lander-main.tf'
 
@@ -51,31 +53,61 @@ get_subnets(vpc, region_nm, profile_nm, file_tfvars, public)
 get_userdata(hostname, timezone, user)
 
 az = args.zone or "a"
+all_args = [args.hostname, args.keyname, args.role]
+empty_values = []
 
-# populate vpc-specific values in tfvars
+## populate vpc-specific values in tfvars
+# 
 intro_file = open(file_tfvars, 'r+')
 intro_file.read()
 print(f"# instance specific", file=intro_file)
 if args.hostname:
     print(f'hostname\t= "{args.hostname}"', file=intro_file)
+else: 
+    empty_values.append("hostname")
 if args.keyname:
     print(f'key_name\t= "{args.keyname}"', file=intro_file)
+else:
+    empty_values.append("keyname")
 if args.role:
     print(f'iam_instance_profile\t= "{args.role}"', file=intro_file)
+else:
+    empty_values.append("role")
 if args.type:
     print(f'instance_type\t= "{args.type}"', file=intro_file)
-print(f'availability_zone\t= "{region_nm}{az}"', file=intro_file)
-print(f'os\t\t= "{os}"', file=intro_file)
+else:
+    empty_values.append("type")
+if args.zone:
+    print(f'availability_zone\t= "{region_nm}{az}"', file=intro_file)
+else:
+    empty_values.append("zone")
+if args.os:
+    print(f'os\t\t= "{os}"', file=intro_file)
+else:
+    empty_values.append("os")
 intro_file.close()
 
+# add security groups to tfvars
 get_sgs(vpc, region_nm, profile_nm, file_tfvars)
+
+## populat instance-specific values in main
+# add block devices(s) to main (optional)
 add_block_device()
 
+# close main instance block
 with open(file_main, 'r+') as file:
     file.read()
     print("}", file=file)
-    if public:
+
+# add eip to main (optional)
+if public:
+    with open(file_main, 'r+') as file:
+        file.read()
         print('resource "aws_eip" "public_ip" {', file=file)
         print('\tvpc\t= true', file=file)
         print('\tinstance\t= aws_instance.moon_node.id', file=file)
         print("}", file=file)
+
+print("The following parameters were not supplied:")
+for item in empty_values:
+    print(item)

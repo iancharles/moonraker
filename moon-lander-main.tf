@@ -29,12 +29,17 @@ resource "aws_instance" "moon_node" {
     #### END DEFAULT TEMPLATE
 
     #### BEGIN MOONRAKER-GENERATED VALUES
-
-#   27 - Optional - EBS Block Device
+#   Optional - EBS Block Device
 	ebs_block_device {
 		device_name = "/dev/xvdb"
 		encrypted   = true
 		volume_size = 32
+	}
+#   Optional - EBS Block Device
+	ebs_block_device {
+		device_name = "/dev/xvdc"
+		encrypted   = true
+		volume_size = 50
 	}
 }
 resource "aws_eip" "public_ip" {
