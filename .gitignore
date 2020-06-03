@@ -1,4 +1,6 @@
 variables.tfvars
+moon-lander-vars.tfvars
+moon-lander-output.yml
 # PART THEE PYTHON
 
 # Byte-compiled / optimized / DLL files

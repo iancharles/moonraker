@@ -82,5 +82,5 @@ def get_amis(region_nm, profile_nm, file_name):
             for key_two in subnet_dict[key]:
                 for key_three in subnet_dict[key][key_two]:
                     for key_four in subnet_dict[key][key_two][key_three]:
-                        print(f"\t'{key_four}'\t=  '{subnet_dict[key][key_two][key_three][key_four]}'", file=file)
+                        print(f'\t"{key_four}"\t=  "{subnet_dict[key][key_two][key_three][key_four]}"', file=file)
         print("}", file=file)

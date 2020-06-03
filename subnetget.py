@@ -50,7 +50,7 @@ def get_subnets(vpc, region_nm, profile_nm, file_name, public):
             for key_two in subnet_dict[key]:
                 for key_three in subnet_dict[key][key_two]:
                     for key_four in subnet_dict[key][key_two][key_three]:
-                        print(f"\t'{key_three}'\t= '{subnet_dict[key][key_two][key_three][key_four]}'", file=file)
+                        print(f'\t"{key_three}"\t= "{subnet_dict[key][key_two][key_three][key_four]}"', file=file)
         print("}", file=file)
 
         # PUBLIC SUBNETS
@@ -92,5 +92,5 @@ def get_subnets(vpc, region_nm, profile_nm, file_name, public):
                 for key_two in subnet_dict[key]:
                     for key_three in subnet_dict[key][key_two]:
                         for key_four in subnet_dict[key][key_two][key_three]:
-                            print(f"\t'{key_three}'\t= '{subnet_dict[key][key_two][key_three][key_four]}'", file=file)
+                            print(f'\t"{key_three}"\t= "{subnet_dict[key][key_two][key_three][key_four]}"', file=file)
             print("}", file=file)

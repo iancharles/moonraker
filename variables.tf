@@ -18,7 +18,7 @@ variable "subnets_public" {
 
 
 # Per build
-variable availability_zone {}
+variable "availability_zone" {}
 
 
 variable "iam_instance_profile" {}
