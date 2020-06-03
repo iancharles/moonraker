@@ -1,4 +1,4 @@
-#---------root/main.tf-----------
+    #---------root/main.tf-----------
 
 # PROVIDER - Include in ALL
 provider "aws" {
@@ -24,7 +24,7 @@ resource "aws_instance" "moon_server" {
     root_block_device {
         encrypted   = true
     }
-#   27 - Optional - EBS Block Device
+    # VAR_DISKS
     ebs_block_device {
         device_name = "/dev/xvdb"
         encrypted   = true
