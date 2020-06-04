@@ -142,9 +142,9 @@ def main():
 
     # USER GEN OR PROMPTED
     if args.sgs:
-        sgs_fmt = ""
+        sgs_fmt = []
         for group in args.sgs:
-            sgs_fmt += "\n        - " + group
+            sgs_fmt.append(group)
         value_dict["security_groups"] = sgs_fmt
     else:
         value_dict["security_groups"] = get_sgs(vpc, region, profile)
@@ -309,7 +309,16 @@ def main():
     with open(build_file, 'w') as f:
         # f.write(build)
         for key, value in value_dict.items():
-            f.write(f"{key}: {value}\n")
+            if isinstance(value,list):
+                f.write(f"{key} = {value}\n")
+            elif isinstance(value,dict):
+                f.write(f"{key}")
+                f.write(" = {\n")
+                for k, v in value.items():
+                    f.write(f'\t{k} = "{v}"\n')
+                f.write("}\n")
+            else:
+                f.write(f'{key} = "{value}"\n')
 
     # print(value_dict)
 

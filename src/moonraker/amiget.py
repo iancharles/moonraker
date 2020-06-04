@@ -78,14 +78,11 @@ def get_amimap(profile_nm, region_nm):
         pass
 
 
-    ami_map = ""
+    ami_map = {}
     for key in subnet_dict:
-        # ami_map += (key + ":")
         for key_two in subnet_dict[key]:
-            # ami_map += ("  " + key_two + ":")
             for key_three in subnet_dict[key][key_two]:
-                # ami_map += ("\n    " + key_three + ":")
                 for key_four in subnet_dict[key][key_two][key_three]:
-                    ami_map += ("\n    " + key_four + ": " + subnet_dict[key][key_two][key_three][key_four])
+                    ami_map[key_four] = subnet_dict[key][key_two][key_three][key_four]        
 
     return ami_map

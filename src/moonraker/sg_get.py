@@ -47,4 +47,4 @@ def get_sgs(vpc, region_nm, profile_nm):
     for group in selected_security_groups:
         sg_output += "\n        - " + group
 
-    return sg_output
+    return selected_security_groups
