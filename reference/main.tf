@@ -20,6 +20,8 @@ resource "aws_instance" "moon_node" {
         Name        = var.hostname
     }
 
+    user_data = file("userdata.sh")
+
     # 23 - Root EBS Volume
     root_block_device {
         encrypted   = true
