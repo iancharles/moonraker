@@ -3,6 +3,7 @@ moon-lander-vars.tfvars
 moon-lander-output.yml
 .vscode/
 reference/
+Pipfile.lock
 
 # PART THEE PYTHON
 

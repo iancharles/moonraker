@@ -54,6 +54,8 @@ def main():
     else:
         pop_dict = {}
 
+    source_dict  {}
+
 
     #Note: if updating allowed_os, also update linux_os (below) and user_dict in userdata.py
     allowed_os = [
@@ -64,7 +66,7 @@ def main():
         ]
     allowed_regions = ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1']
 
-    source_file = resource_filename('moonraker', 'ec2.yml')
+    source_file = resource_filename('reference', 'main.yml')
     # source_file = "ec2.yml"
     build_file = '{:%Y%m%d-%H%M}'.format(datetime.datetime.now()) + ".tf"
 
@@ -218,7 +220,9 @@ def main():
 
     # Write user_data
     if os in linux_os:
+        source_dict["#user_data"] = 'user_data =  file("userdata.sh")'
 
+        # Get values to populate user_data file
         if args.timezone:
             # value_dict["# timedatectl"] = "timedatectl"
             tz = args.timezone
