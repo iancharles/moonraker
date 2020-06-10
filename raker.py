@@ -10,12 +10,16 @@ from userdata_get import get_userdata
 parser = argparse.ArgumentParser()
 parser.add_argument('-r', '--region', help="region of VPC")
 parser.add_argument('-v', '--vpc', help="VPC to get vars")
+<<<<<<< HEAD
 parser.add_argument('-o','--os', help="operating system")
 parser.add_argument('-t','--type', help="instance type (size)")
 parser.add_argument('-z','--zone', help="availability zone")
 parser.add_argument('--hostname', help='name of instance')
 parser.add_argument('--keyname', help='name of keypair')
 parser.add_argument('--role', help='instance iam role')
+=======
+parser.add_argument('--os', help="operating system")
+>>>>>>> merge-cb
 parser.add_argument('--profile', help="AWS CLI Profile")
 parser.add_argument('--network', help="Public or Private subnet")
 parser.add_argument('--timezone', help='Timezone of instance')
@@ -26,6 +30,7 @@ profile_nm = args.profile
 region_nm = args.region
 vpc = args.vpc
 os = args.os
+<<<<<<< HEAD
 #temp
 moon_node_nos = [1, 2, 3, 4, 5]
 
@@ -40,6 +45,16 @@ file_tfvars = 'moon-lander-vars.tfvars'
 file_main   = 'moon-lander-main.tf'
 
 intro_file = open(file_tfvars, 'w')
+=======
+
+if args.public:
+    public = True
+else:
+    public = False
+file_name = 'moon-lander-vars.tfvars'
+
+intro_file = open(file_name, 'w')
+>>>>>>> merge-cb
 print("#Build Notes:", file=intro_file)
 print("#------------", file=intro_file)
 print(f"# for VPC: '{vpc}'\n", file=intro_file)
@@ -61,6 +76,7 @@ empty_values = []
 intro_file = open(file_tfvars, 'r+')
 intro_file.read()
 print(f"# instance specific", file=intro_file)
+<<<<<<< HEAD
 if args.hostname:
     print(f'hostname\t= "{args.hostname}"', file=intro_file)
 else: 
@@ -85,6 +101,10 @@ if args.os:
     print(f'os\t\t= "{os}"', file=intro_file)
 else:
     empty_values.append("os")
+=======
+print(f'availability_zone\t= "{region_nm}{az_raw}"', file=intro_file)
+print(f'os\t\t= "{os}"', file=intro_file)
+>>>>>>> merge-cb
 intro_file.close()
 
 # add security groups to tfvars
