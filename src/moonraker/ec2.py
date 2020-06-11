@@ -9,7 +9,7 @@ def main():
     import datetime
     from os import environ
     from pkg_resources import resource_filename
-
+    from json import dumps
 
     from moonraker.amiget import get_amimap
     from moonraker.iam_role_get import get_iam_role
@@ -54,7 +54,7 @@ def main():
     else:
         pop_dict = {}
 
-    source_dict  {}
+    source_dict = {}
 
 
     #Note: if updating allowed_os, also update linux_os (below) and user_dict in userdata.py
@@ -66,9 +66,9 @@ def main():
         ]
     allowed_regions = ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1']
 
-    source_file = resource_filename('reference', 'main.yml')
+    source_file = resource_filename('moonraker', 'main.tf')
     # source_file = "ec2.yml"
-    build_file = '{:%Y%m%d-%H%M}'.format(datetime.datetime.now()) + ".tf"
+    build_file = '{:%Y%m%d-%H%M}'.format(datetime.datetime.now()) + ".tfvars"
 
     if args.profile:
         profile = args.profile
@@ -138,18 +138,15 @@ def main():
 
     value_dict["ami"] = get_amimap(profile, region)
 
-    value_dict["# VAR_SUBNET_MAP"] = get_subnets(profile, allowed_regions)
-
-
 
     # USER GEN OR PROMPTED
     if args.sgs:
         sgs_fmt = []
         for group in args.sgs:
             sgs_fmt.append(group)
-        value_dict["security_groups"] = sgs_fmt
+        value_dict["security_groups"] = dumps(sgs_fmt)
     else:
-        value_dict["security_groups"] = get_sgs(vpc, region, profile)
+        value_dict["security_groups"] = dumps(get_sgs(vpc, region, profile))
 
     # If OS is entered, use it. Else, create as parameter
     if args.os in allowed_os:
@@ -198,9 +195,11 @@ def main():
 
     # If network type is entered, use it. Else, create as parameter
     if args.network and args.network.lower() == 'public':
-        value_dict["VAR_NETWORK"] = "Public"
+        # value_dict["network"] = "Public"
+        value_dict["public_subnets"] = get_subnets(profile, region, "Public")
     else:
-        value_dict["VAR_NETWORK"] = "Private"
+        # value_dict["network"] = "Private"
+        value_dict["private_subnets"] = get_subnets(profile, region, "Private")
 
     # If role is entered, use it. Else, create as parameter
     if args.role:
@@ -246,14 +245,14 @@ def main():
             print("Default username is required for Linux instances:")
             user = input("Please enter user: ")
 
-        value_dict["# VAR_UD"] = add_user_data(
-            os, hn, tz, user)
+        # value_dict["# VAR_UD"] = add_user_data(
+        #     os, hn, tz, user)
 
     # Format root EBS vol properly
-    if os in ['amazonlinux2']:
-        value_dict["VAR_ROOT_VOL_NAME"] = "/dev/xvda"
-    else:
-        value_dict["VAR_ROOT_VOL_NAME"] = "/dev/sda1"
+    # if os in ['amazonlinux2']:
+    #     value_dict["VAR_ROOT_VOL_NAME"] = "/dev/xvda"
+    # else:
+    #     value_dict["VAR_ROOT_VOL_NAME"] = "/dev/sda1"
 
     # Override root volume size if necessary
     if args.root:
@@ -261,7 +260,7 @@ def main():
     else:
         root_vol_size = str(64)
 
-    value_dict["VAR_ROOT_VOL_SIZE"] = root_vol_size
+    value_dict["root_vol_size"] = root_vol_size
 
     # If disks are entered, add them. Else, ignore
     if args.disks:
@@ -314,7 +313,9 @@ def main():
         # f.write(build)
         for key, value in value_dict.items():
             if isinstance(value,list):
-                f.write(f"{key} = {value}\n")
+                f.write(f"{key} =\t")
+                f.write(str(value)[1:-1])
+                f.write("\n")
             elif isinstance(value,dict):
                 f.write(f"{key}")
                 f.write(" = {\n")

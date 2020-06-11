@@ -42,9 +42,10 @@ def get_sgs(vpc, region_nm, profile_nm):
     print("\n#-------------#\n")
     # security_groups = dumps(selected_security_groups)
 
-    sg_output = ""
+    # sg_output = ""
 
-    for group in selected_security_groups:
-        sg_output += "\n        - " + group
+    # for group in selected_security_groups:
+    #     sg_output += "\n        - " + group
 
-    return selected_security_groups
+    return dumps(selected_security_groups)
+    # return selected_security_groups
