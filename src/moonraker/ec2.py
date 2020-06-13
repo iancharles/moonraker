@@ -312,9 +312,8 @@ def main():
     with open(build_file, 'w') as f:
         # f.write(build)
         for key, value in value_dict.items():
-            if isinstance(value,list):
-                f.write(f"{key} =\t")
-                f.write(str(value)[1:-1])
+            if key == "security_groups":
+                f.write(f"{key} = {value}")
                 f.write("\n")
             elif isinstance(value,dict):
                 f.write(f"{key}")
