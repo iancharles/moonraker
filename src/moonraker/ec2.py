@@ -49,10 +49,10 @@ def main():
     value_dict = {}
     skipped_opts = {}
 
-    if args.populate:
-        pop_dict = populate(args.populate)
-    else:
-        pop_dict = {}
+    # if args.populate:
+    #     pop_dict = populate(args.populate)
+    # else:
+    pop_dict = {}
 
     source_dict = {}
 
@@ -196,10 +196,10 @@ def main():
     # If network type is entered, use it. Else, create as parameter
     if args.network and args.network.lower() == 'public':
         # value_dict["network"] = "Public"
-        value_dict["public_subnets"] = get_subnets(profile, region, "Public")
+        value_dict["subnets_public"] = get_subnets(profile, region, "Public")
     else:
         # value_dict["network"] = "Private"
-        value_dict["private_subnets"] = get_subnets(profile, region, "Private")
+        value_dict["subnets_private"] = get_subnets(profile, region, "Private")
 
     # If role is entered, use it. Else, create as parameter
     if args.role:

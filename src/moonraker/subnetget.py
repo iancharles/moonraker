@@ -14,6 +14,7 @@ def get_subnets(profile_nm, region_nm, network_type="Private"):
 
     # Initial setup
     session = boto3.Session(profile_name=profile_nm, region_name=region_nm)
+    var_file = "variables.tf"
 
     # Initiate the session
     ec2 = session.client('ec2')
@@ -36,7 +37,12 @@ def get_subnets(profile_nm, region_nm, network_type="Private"):
         for subnet in public_subnets['Subnets']:
             subnet_dict[subnet['AvailabilityZone']] = subnet['SubnetId']
 
-        output = "public_subnets = {"
+        output = "subnets_public = {"
+        with open(var_file, 'r+') as f:
+            f.read()
+            f.write('\nvariable "subnets_public" {\n')
+            f.write("\ttype    = map(string)\n")
+            f.write("}\n")
 
     else:
         # Get private subnets
@@ -55,13 +61,11 @@ def get_subnets(profile_nm, region_nm, network_type="Private"):
         for subnet in private_subnets['Subnets']:
             subnet_dict[subnet['AvailabilityZone']] = subnet['SubnetId']
 
-        output = "private_subnets = {"
+        output = "subnets_private = {"
+        with open(var_file, 'r+') as f:
+            f.read()
+            f.write('\nvariable "subnets_private" {\n')
+            f.write("\ttype    = map(string)\n")
+            f.write("}\n")
+   
     return subnet_dict
-    # for item in subnet_dict:
-    #     output += f'\n\t"{item}"\t"{subnet_dict[item]}"'
-    # output += "\n}"
-
-    # return output
-
-# test = get_subnets("default", 'us-west-2')
-# print(test)
