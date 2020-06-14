@@ -66,9 +66,12 @@ def main():
         ]
     allowed_regions = ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1']
 
-    source_file = resource_filename('moonraker', 'main.tf')
+    # source_file = resource_filename('moonraker', 'main.tf')
     # source_file = "ec2.yml"
-    build_file = '{:%Y%m%d-%H%M}'.format(datetime.datetime.now()) + ".tfvars"
+    build_no = '{:%H%M%S}'.format(datetime.datetime.now())
+    # build_file = '{:%Y%m%d-%H%M}'.format(datetime.datetime.now()) + ".tfvars"
+    build_file = f"tfvars-{build_no}.tfvars"
+    main_file = f"ec2-{build_no}.tf"
 
     if args.profile:
         profile = args.profile
@@ -108,18 +111,8 @@ def main():
         print("\nTYPE")
         print("====")
         print("Instance type is required.")
-        # TO DO: Add instance type generator
-        # print("You can choose to see a list of types before entering a value.")
-        # size_choices = get_sizes(profile, region)
-        # if input("See available types first? [y/N] ").lower() == "y":
-            # print(size_choices)
         selection = input("\nEnter instance type (size): ")
         value_dict["instance_type"] = selection
-        # if selection in size_choices:
-        #     value_dict["VAR_INSTANCE_TYPE"] = selection
-        # else:
-        #     print("That was not a valid choice. Exiting...")
-        #     sys.exit(1)
 
     # key pair
     if args.key:
@@ -196,10 +189,10 @@ def main():
     # If network type is entered, use it. Else, create as parameter
     if args.network and args.network.lower() == 'public':
         # value_dict["network"] = "Public"
-        value_dict["subnets_public"] = get_subnets(profile, region, "Public")
+        value_dict["subnets_public"] = get_subnets(main_file, profile, region, "Public")
     else:
         # value_dict["network"] = "Private"
-        value_dict["subnets_private"] = get_subnets(profile, region, "Private")
+        value_dict["subnets_private"] = get_subnets(main_file, profile, region, "Private")
 
     # If role is entered, use it. Else, create as parameter
     if args.role:

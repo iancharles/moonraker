@@ -1,19 +1,19 @@
 import boto3
 import collections
-
+from pkg_resources import resource_filename
 
 # Initial structure and defaults
 subnet_dict = collections.defaultdict(dict)
 # subnet_dict['Mappings'] = collections.defaultdict(dict)
 # subnet_dict['Mappings']['SubnetMap'] = collections.defaultdict(dict)
 
-# regions = ['us-east-1', 'us-east-2', 'us-west-2']
-
 # NU LOOP
-def get_subnets(profile_nm, region_nm, network_type="Private"):
+def get_subnets(main_file, profile_nm, region_nm, network_type="Private"):
 
     # Initial setup
     session = boto3.Session(profile_name=profile_nm, region_name=region_nm)
+    main_source_file = resource_filename('moonraker', 'ec2.tf')
+    # main_source_file = "main.tf"
     var_file = "variables.tf"
 
     # Initiate the session
@@ -37,12 +37,22 @@ def get_subnets(profile_nm, region_nm, network_type="Private"):
         for subnet in public_subnets['Subnets']:
             subnet_dict[subnet['AvailabilityZone']] = subnet['SubnetId']
 
-        output = "subnets_public = {"
         with open(var_file, 'r+') as f:
             f.read()
             f.write('\nvariable "subnets_public" {\n')
             f.write("\ttype    = map(string)\n")
-            f.write("}\n")
+            f.write("\n}\n")
+            
+        with open(main_source_file, 'r') as f:
+            build = f.read()
+            build = build.replace("subnets_private", "subnets_public")
+        
+        with open(main_file, 'w') as f:
+            f.write(build)
+            f.write('\nresource "aws_eip" "public_ip" {')
+            f.write("\n\tvpc\t= true")
+            f.write("\n\tinstance\t= aws_instance.moon_node.id")
+            f.write("\n}")
 
     else:
         # Get private subnets
@@ -61,7 +71,6 @@ def get_subnets(profile_nm, region_nm, network_type="Private"):
         for subnet in private_subnets['Subnets']:
             subnet_dict[subnet['AvailabilityZone']] = subnet['SubnetId']
 
-        output = "subnets_private = {"
         with open(var_file, 'r+') as f:
             f.read()
             f.write('\nvariable "subnets_private" {\n')
