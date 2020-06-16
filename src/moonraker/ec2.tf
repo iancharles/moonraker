@@ -24,12 +24,9 @@ resource "aws_instance" "moon_node" {
 
     # 23 - Root EBS Volume
     root_block_device {
+        volume_size = var.root_vol_size
         encrypted   = true
     }
 #   27 - Optional - EBS Block Device
-    ebs_block_device {
-        device_name = "/dev/xvdb"
-        encrypted   = true
-        volume_size = 16
-    }
+#VAR_EBS
 }

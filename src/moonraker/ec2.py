@@ -10,6 +10,7 @@ def main():
     from os import environ
     from pkg_resources import resource_filename
     from json import dumps
+    from pathlib import Path
 
     from moonraker.amiget import get_amimap
     from moonraker.iam_role_get import get_iam_role
@@ -65,13 +66,27 @@ def main():
         'ubuntu16', 'ubuntu18', 'amazonlinux2', 'rhel7', 'centos7'
         ]
     allowed_regions = ['us-east-1', 'us-east-2', 'us-west-2', 'eu-central-1']
-
-    # source_file = resource_filename('moonraker', 'main.tf')
-    # source_file = "ec2.yml"
+    
+    # Generate filename values
     build_no = '{:%H%M%S}'.format(datetime.datetime.now())
-    # build_file = '{:%Y%m%d-%H%M}'.format(datetime.datetime.now()) + ".tfvars"
-    build_file = f"tfvars-{build_no}.tfvars"
+    tfvars_file = f"tfvars-{build_no}.tfvars"
+    
+    # Create Main File
     main_file = f"ec2-{build_no}.tf"
+    main_source_file = resource_filename('moonraker', 'ec2.tf')
+    with open(main_source_file, 'r') as file :
+        filedata = file.read()
+    with open(main_file, 'w') as file:
+            file.write(filedata)
+
+    # Create variables file
+    var_file = Path("variables.tf")
+    if not var_file.is_file():
+        var_source_file = resource_filename('moonraker', 'variables.tf')
+        with open(var_source_file, 'r') as file :
+            filedata = file.read()
+        with open(var_file, 'w') as file:
+                file.write(filedata)
 
     if args.profile:
         profile = args.profile
@@ -249,11 +264,8 @@ def main():
 
     # Override root volume size if necessary
     if args.root:
-        root_vol_size = str(args.root)
-    else:
-        root_vol_size = str(64)
-
-    value_dict["root_vol_size"] = root_vol_size
+        # root_vol_size = str(args.root)
+        value_dict["root_vol_size"] = str(args.root)
 
     # If disks are entered, add them. Else, ignore
     if args.disks:
@@ -267,15 +279,23 @@ def main():
         disk_params = ""
 
         for disk in disks:
-            disk_params += "        - DeviceName: " + block_device_pool[counter] + "\n"
-            disk_params += "          Ebs:" + "\n"
-            disk_params += "            VolumeSize: " + disk + "\n"
-            disk_params += "            Encrypted: true"
+            disk_params += "\tebs_block_device {\n"
+            disk_params += f'\t\tdevice_name = "{block_device_pool[counter]}"\n'
+            disk_params += "\t\tencrypted = true\n"
+            disk_params += f"\t\tvolume_size = {disk}\n"
+            disk_params += "\t}\n"
+            
             counter += 1
-            if counter < len(disks):
-                disk_params += "\n"
                 
-        value_dict["# VAR_PARAM_DISKS"] = disk_params
+        # value_dict["# VAR_PARAM_DISKS"] = disk_params
+        # Read in the file
+        with open(main_file, 'r') as file :
+            filedata = file.read()
+        # Replace the target string
+        filedata = filedata.replace('#VAR_EBS', disk_params)
+        # Write the file out again
+        with open(main_file, 'w') as file:
+            file.write(filedata)
     else:
         skipped_opts["Addt'l EBS Volumes"] = "None"
 
@@ -302,7 +322,7 @@ def main():
     #     for key, value in value_dict.items():
     #         build = build.replace(key, value)
         
-    with open(build_file, 'w') as f:
+    with open(tfvars_file, 'w') as f:
         # f.write(build)
         for key, value in value_dict.items():
             if key == "security_groups":
@@ -321,4 +341,5 @@ def main():
 
     print(f"\nYou created this template with the profile {profile}")
     print("Please make sure this is for the correct profile\n")
-    print(f"Your moonraker TF File is now available at {build_file}\n")
+    print(f"Your moonraker TF File is now available at {main_file}\n")
+    print(f"Your moonraker variables now available at {tfvars_file}\n")
