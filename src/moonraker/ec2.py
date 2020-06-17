@@ -73,8 +73,12 @@ def main():
     tfvars_file = Path("variables.tfvars")
     if not tfvars_file.is_file():
         Path(tfvars_file).touch()
-
-    
+    provider_file = Path("main.tf")
+    if not provider_file.is_file():
+        with open(resource_filename('moonraker', 'main.tf')) as f:
+            filedata = f.read()
+        with open(provider_file, 'w') as file:
+            file.write(filedata)    
     # Create Main File
     main_file = f"ec2-{build_no}.tf"
     main_source_file = resource_filename('moonraker', 'ec2.tf')
@@ -231,7 +235,7 @@ def main():
 
     # Write user_data
     if os in linux_os:
-        source_dict["#user_data"] = 'user_data =  file("userdata.sh")'
+        # source_dict["#user_data"] = 'user_data =  file("userdata.sh")'
 
         # Get values to populate user_data file
         if args.timezone:
@@ -243,12 +247,9 @@ def main():
             tz = "UTC"
             skipped_opts["timezone"] = tz
 
-        value_dict["VAR_TIMEZONE"] = tz
-
         # Default system user - maybe only necessary for linux
         if args.user:
             user = args.user
-            value_dict["VAR_USER"] = user
         elif pop_dict and pop_dict['user']:
             user = pop_dict['user']
         else:
@@ -257,8 +258,7 @@ def main():
             print("Default username is required for Linux instances:")
             user = input("Please enter user: ")
 
-        # value_dict["# VAR_UD"] = add_user_data(
-        #     os, hn, tz, user)
+        add_user_data(os, hn, tz, user)
 
     # Format root EBS vol properly
     # if os in ['amazonlinux2']:

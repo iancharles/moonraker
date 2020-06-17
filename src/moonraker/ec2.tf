@@ -1,11 +1,4 @@
-#---------root/main.tf-----------
-
-# PROVIDER - Include in ALL
-provider "aws" {
-    profile = "default"
-    region  = var.region
-}
-
+#---------root/ec2.tf-----------
 
 # 10 - RESOURCE - Include in ALL EC2
 resource "aws_instance" "moon_node" {

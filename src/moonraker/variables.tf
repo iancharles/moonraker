@@ -1,4 +1,6 @@
 #---------root/variables.tf-----------
+# Per build
+variable "profile" {}
 
 # Per VPC
 variable "region" {}
@@ -13,7 +15,7 @@ variable "ami" {
 #VAR_PRIVATE
 
 
-# Per build
+# Per instance
 variable "availability_zone" {}
 
 
