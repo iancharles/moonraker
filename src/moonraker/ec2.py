@@ -55,9 +55,6 @@ def main():
     # else:
     pop_dict = {}
 
-    source_dict = {}
-
-
     #Note: if updating allowed_os, also update linux_os (below) and user_dict in userdata.py
     allowed_os = [
         'ubuntu16', 'ubuntu18', 'amazonlinux2', 'rhel7', 'centos7', 'windows2016'
@@ -235,8 +232,6 @@ def main():
 
     # Write user_data
     if os in linux_os:
-        # source_dict["#user_data"] = 'user_data =  file("userdata.sh")'
-
         # Get values to populate user_data file
         if args.timezone:
             # value_dict["# timedatectl"] = "timedatectl"
