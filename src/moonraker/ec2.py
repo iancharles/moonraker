@@ -69,7 +69,11 @@ def main():
     
     # Generate filename values
     build_no = '{:%H%M%S}'.format(datetime.datetime.now())
-    tfvars_file = f"tfvars-{build_no}.tfvars"
+    # Create tfvars file
+    tfvars_file = Path("variables.tfvars")
+    if not tfvars_file.is_file():
+        Path(tfvars_file).touch()
+
     
     # Create Main File
     main_file = f"ec2-{build_no}.tf"
@@ -322,20 +326,21 @@ def main():
     #     for key, value in value_dict.items():
     #         build = build.replace(key, value)
         
-    with open(tfvars_file, 'w') as f:
-        # f.write(build)
+    with open(tfvars_file, 'r+') as f:
+        existing = f.read()
         for key, value in value_dict.items():
-            if key == "security_groups":
-                f.write(f"{key} = {value}")
-                f.write("\n")
-            elif isinstance(value,dict):
-                f.write(f"{key}")
-                f.write(" = {\n")
-                for k, v in value.items():
-                    f.write(f'\t{k} = "{v}"\n')
-                f.write("}\n")
-            else:
-                f.write(f'{key} = "{value}"\n')
+            if key not in existing:
+                if key == "security_groups":
+                    f.write(f"{key} = {value}")
+                    f.write("\n")
+                elif isinstance(value,dict):
+                    f.write(f"{key}")
+                    f.write(" = {\n")
+                    for k, v in value.items():
+                        f.write(f'\t{k} = "{v}"\n')
+                    f.write("}\n")
+                else:
+                    f.write(f'{key} = "{value}"\n')
 
     # print(value_dict)
 
