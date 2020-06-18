@@ -55,15 +55,12 @@ def main():
     # else:
     pop_dict = {}
 
-<<<<<<< HEAD
-=======
     vars_list = ""
 
     # add generator later
     # instance_count = 1
 
 
->>>>>>> dev
     #Note: if updating allowed_os, also update linux_os (below) and user_dict in userdata.py
     allowed_os = [
         'ubuntu16', 'ubuntu18', 'amazonlinux2', 'rhel7', 'centos7', 'windows2016'
