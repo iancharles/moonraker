@@ -14,27 +14,31 @@ variable "ami" {
 
 #VAR_PRIVATE
 
-
-# Per instance
-variable "availability_zone" {}
-
+# Per instance rarely
+variable "os" {}
 
 variable "iam_instance_profile" {}
 
+variable "key_name" {}
+
+# Per instance sometimes
+variable "availability_zone_BUILD_NO" {}
 
 variable "instance_type" {}
 
-variable "key_name" {}
-
-variable "os" {}
+variable "root_vol_size" {
+    default = 64
+}
 
 variable "security_groups" {
     type    = list
 }
 
-# per instance
-variable "hostname" {}
+# Per instance always
+variable "hostname_BUILD_NO" {}
 
-variable "root_vol_size" {
-    default = 64
-}
+
+
+
+
+

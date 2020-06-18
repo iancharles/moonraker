@@ -54,7 +54,7 @@ def get_subnets(main_file, profile_nm, region_nm, network_type="Private"):
             file.write(filedata)
             file.write('\nresource "aws_eip" "public_ip" {')
             file.write("\n\tvpc\t= true")
-            file.write("\n\tinstance\t= aws_instance.moon_node.id")
+            file.write("\n\tinstance\t= aws_instance.ec2-BUILD_NO.id")
             file.write("\n}")
 
     else:
