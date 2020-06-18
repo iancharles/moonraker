@@ -52,7 +52,7 @@ def get_subnets(main_file, profile_nm, region_nm, network_type="Private"):
         # Write the file out again
         with open(main_file, 'w') as file:
             file.write(filedata)
-            file.write('\nresource "aws_eip" "public_ip" {')
+            file.write('\nresource "aws_eip" "public_ip-BUILD_NO" {')
             file.write("\n\tvpc\t= true")
             file.write("\n\tinstance\t= aws_instance.ec2-BUILD_NO.id")
             file.write("\n}")

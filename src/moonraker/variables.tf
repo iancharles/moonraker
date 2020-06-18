@@ -22,7 +22,6 @@ variable "iam_instance_profile" {}
 variable "key_name" {}
 
 # Per instance sometimes
-variable "availability_zone_BUILD_NO" {}
 
 variable "instance_type" {}
 
@@ -35,10 +34,3 @@ variable "security_groups" {
 }
 
 # Per instance always
-variable "hostname_BUILD_NO" {}
-
-
-
-
-
-

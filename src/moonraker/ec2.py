@@ -55,10 +55,10 @@ def main():
     # else:
     pop_dict = {}
 
-    source_dict = {}
+    vars_list = ""
 
     # add generator later
-    instance_count = 1
+    # instance_count = 1
 
 
     #Note: if updating allowed_os, also update linux_os (below) and user_dict in userdata.py
@@ -199,6 +199,8 @@ def main():
         print("========")
         hn = input("Please enter hostname: ")
 
+    vars_list += (f'\nvariable "hostname_{build_no}"')
+    vars_list += " {}\n"
     value_dict[f"hostname_{build_no}"] = hn
 
     # USER GEN - OPTIONAL
@@ -208,7 +210,8 @@ def main():
         az = args.zone
     else:
         az = "a"
-
+    vars_list += (f'variable "availability_zone_{build_no}"')
+    vars_list += " {}\n"
     value_dict[f"availability_zone_{build_no}"] = region + az
 
 
@@ -344,7 +347,8 @@ def main():
     # Finalize variables file
     with open(var_file, 'r') as file :
         filedata = file.read()
-        filedata = filedata.replace("BUILD_NO", build_no)
+        # filedata = filedata.replace("BUILD_NO", build_no)
+        filedata += vars_list
     with open(var_file, 'w') as file:
         file.write(filedata)
 
