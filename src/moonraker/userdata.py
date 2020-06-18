@@ -1,7 +1,7 @@
 import boto3
 
 
-def add_user_data(os, hostname, timezone, user):
+def add_user_data(os, hostname, timezone, user, build_no):
     value_dict = {
         "VAR_HOSTNAME": hostname,
         "VAR_TIMEZONE": timezone,
@@ -37,7 +37,7 @@ reboot now
 
     for key, value in value_dict.items():
         userdata = userdata.replace(key, value)
-    with open("userdata.sh", 'w') as f:
+    with open(f"user_data_{build_no}.sh", 'w') as f:
         f.write(userdata)
     # return userdata
 

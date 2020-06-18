@@ -55,6 +55,15 @@ def main():
     # else:
     pop_dict = {}
 
+<<<<<<< HEAD
+=======
+    vars_list = ""
+
+    # add generator later
+    # instance_count = 1
+
+
+>>>>>>> dev
     #Note: if updating allowed_os, also update linux_os (below) and user_dict in userdata.py
     allowed_os = [
         'ubuntu16', 'ubuntu18', 'amazonlinux2', 'rhel7', 'centos7', 'windows2016'
@@ -82,7 +91,7 @@ def main():
     with open(main_source_file, 'r') as file :
         filedata = file.read()
     with open(main_file, 'w') as file:
-            file.write(filedata)
+        file.write(filedata)
 
     # Create variables file
     var_file = Path("variables.tf")
@@ -91,7 +100,7 @@ def main():
         with open(var_source_file, 'r') as file :
             filedata = file.read()
         with open(var_file, 'w') as file:
-                file.write(filedata)
+            file.write(filedata)
 
     if args.profile:
         profile = args.profile
@@ -183,10 +192,9 @@ def main():
             skipped_opts["os"] = "Enter as PARAMETER in CloudFormation (Windows Only)"
 
 
+    # USER GEN - REQUIRED
 
-    # USER GEN - OPTIONAL
-
-    # Hostname (maybe this should be required)
+    # Hostname (Required)
     if args.hostname:
         hn = args.hostname
     else:
@@ -194,15 +202,20 @@ def main():
         print("========")
         hn = input("Please enter hostname: ")
 
-    value_dict["hostname"] = hn
+    vars_list += (f'\nvariable "hostname_{build_no}"')
+    vars_list += " {}\n"
+    value_dict[f"hostname_{build_no}"] = hn
+
+    # USER GEN - OPTIONAL
 
     # Availability Zone
     if args.zone:
         az = args.zone
     else:
         az = "a"
-
-    value_dict["availability_zone"] = region + az
+    vars_list += (f'variable "availability_zone_{build_no}"')
+    vars_list += " {}\n"
+    value_dict[f"availability_zone_{build_no}"] = region + az
 
 
 
@@ -253,7 +266,7 @@ def main():
             print("Default username is required for Linux instances:")
             user = input("Please enter user: ")
 
-        add_user_data(os, hn, tz, user)
+        add_user_data(os, hn, tz, user, build_no)
 
     # Format root EBS vol properly
     # if os in ['amazonlinux2']:
@@ -290,13 +303,14 @@ def main():
         # Read in the file
         with open(main_file, 'r') as file :
             filedata = file.read()
-        # Replace the target string
-        filedata = filedata.replace('#VAR_EBS', disk_params)
+        # Replace the target string    
+            filedata = filedata.replace('#VAR_EBS', disk_params)
         # Write the file out again
         with open(main_file, 'w') as file:
             file.write(filedata)
     else:
         skipped_opts["Addt'l EBS Volumes"] = "None"
+
 
 
 
@@ -320,7 +334,26 @@ def main():
     #     build = f.read()
     #     for key, value in value_dict.items():
     #         build = build.replace(key, value)
-        
+
+## FINALIZE
+    # Finalize instance main file
+    with open(main_file, 'r') as file :
+        filedata = file.read()
+    # Replace the target string    
+        filedata = filedata.replace('BUILD_NO', build_no)
+    # Write the file out again
+    with open(main_file, 'w') as file:
+        file.write(filedata)  
+
+    # Finalize variables file
+    with open(var_file, 'r') as file :
+        filedata = file.read()
+        # filedata = filedata.replace("BUILD_NO", build_no)
+        filedata += vars_list
+    with open(var_file, 'w') as file:
+        file.write(filedata)
+
+    # Finalize TFVARS file
     with open(tfvars_file, 'r+') as f:
         existing = f.read()
         for key, value in value_dict.items():
@@ -339,6 +372,7 @@ def main():
 
     # print(value_dict)
 
+    # Print final output
     print(f"\nYou created this template with the profile {profile}")
     print("Please make sure this is for the correct profile\n")
     print(f"Your moonraker TF File is now available at {main_file}\n")
