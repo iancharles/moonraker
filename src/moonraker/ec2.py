@@ -12,7 +12,7 @@ def main():
     from json import dumps
     from pathlib import Path
 
-    from moonraker.amiget import get_amimap
+    # from moonraker.amiget import get_amimap
     from moonraker.iam_role_get import get_iam_role
     from moonraker.keypairget import get_key_pairs
     from moonraker.os_get import get_os
@@ -99,6 +99,15 @@ def main():
         with open(var_file, 'w') as file:
             file.write(filedata)
 
+    # Create data file
+    data_file = Path("data.tf")
+    if not data_file.is_file():
+        data_source_file = resource_filename('moonraker', 'data.tf')
+        with open(data_source_file, 'r') as file :
+            filedata = file.read()
+        with open(data_file, 'w') as file:
+            file.write(filedata)
+
     if args.profile:
         profile = args.profile
     elif 'AWS_PROFILE' in environ:
@@ -156,7 +165,7 @@ def main():
 
     # GET AUTOMATIC VALUES
 
-    value_dict["ami"] = get_amimap(profile, region)
+    # value_dict["ami"] = get_amimap(profile, region)
 
 
     # USER GEN OR PROMPTED
@@ -176,18 +185,19 @@ def main():
         os = get_os(allowed_os)
         if os:
             value_dict["os"] = os
-        else:
-            print("\nProceeding without OS")
-            os_params = "OS:"
-            os_params += "\n    Type: String"
-            os_params += "\n    AllowedValues:"
-            for os in allowed_os:
-                if os not in linux_os:
-                    os_params += "\n      - " + os
+    
+        # else:
+        #     print("\nProceeding without OS")
+        #     os_params = "OS:"
+        #     os_params += "\n    Type: String"
+        #     os_params += "\n    AllowedValues:"
+        #     for os in allowed_os:
+        #         if os not in linux_os:
+        #             os_params += "\n      - " + os
 
-            value_dict["# VAR_PARAM_OS"] = os_params
-            value_dict["os"] = "!Ref OS"
-            skipped_opts["os"] = "Enter as PARAMETER in CloudFormation (Windows Only)"
+        #     value_dict["# VAR_PARAM_OS"] = os_params
+        #     value_dict["os"] = "!Ref OS"
+        #     skipped_opts["os"] = "Enter as PARAMETER in CloudFormation (Windows Only)"
 
 
     # USER GEN - REQUIRED
@@ -339,6 +349,7 @@ def main():
         filedata = file.read()
     # Replace the target string    
         filedata = filedata.replace('BUILD_NO', build_no)
+        filedata = filedata.replace("VAR_OS", os)
     # Write the file out again
     with open(main_file, 'w') as file:
         file.write(filedata)  

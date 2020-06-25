@@ -2,7 +2,7 @@
 
 # 10 - RESOURCE - Include in ALL EC2
 resource "aws_instance" "ec2-BUILD_NO" {
-    ami                     = lookup(var.ami, var.os)
+    ami                     = data.aws_ami.VAR_OS.id
     iam_instance_profile    = var.iam_instance_profile
     instance_type           = var.instance_type
     key_name                = var.key_name_BUILD_NO

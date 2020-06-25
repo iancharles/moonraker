@@ -5,9 +5,9 @@ variable "profile" {}
 # Per VPC
 variable "region" {}
 
-variable "ami" {
-    type    = map(string)
-}
+# variable "ami" {
+#     type    = map(string)
+# }
 
 
 #VAR_PUBLIC
