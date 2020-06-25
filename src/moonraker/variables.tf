@@ -19,7 +19,6 @@ variable "os" {}
 
 variable "iam_instance_profile" {}
 
-variable "key_name" {}
 
 # Per instance sometimes
 

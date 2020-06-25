@@ -142,16 +142,17 @@ def main():
 
     # key pair
     if args.key:
-        value_dict["key_name"] = args.key
+        value_dict[f"key_name_{build_no}"] = args.key
     else:
         key = get_key_pairs(profile, region)
         if key:
-            value_dict["key_name"] = key
-        else:
-            print("Keypair is required")
-            print("Exiting...")
-            sys.exit(1)
-
+            value_dict[f"key_name_{build_no}"] = key
+        # else:
+        #     print("Keypair is required")
+        #     print("Exiting...")
+        #     sys.exit(1)
+    vars_list += (f'\nvariable "key_name_{build_no}"')
+    vars_list += " {}\n"
 
     # GET AUTOMATIC VALUES
 

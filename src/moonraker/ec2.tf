@@ -5,7 +5,7 @@ resource "aws_instance" "ec2-BUILD_NO" {
     ami                     = lookup(var.ami, var.os)
     iam_instance_profile    = var.iam_instance_profile
     instance_type           = var.instance_type
-    key_name                = var.key_name
+    key_name                = var.key_name_BUILD_NO
     vpc_security_group_ids  = var.security_groups
     subnet_id               = lookup(var.subnets_private, var.availability_zone_BUILD_NO)
 
