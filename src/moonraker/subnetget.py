@@ -7,7 +7,7 @@ subnet_dict = collections.defaultdict(dict)
 # subnet_dict['Mappings']['SubnetMap'] = collections.defaultdict(dict)
 
 # NU LOOP
-def get_subnets(main_file, profile_nm, region_nm, network_type="Private"):
+def get_subnets(vpc, main_file, profile_nm, region_nm, network_type="Private"):
 
     # Initial setup
     session = boto3.Session(profile_name=profile_nm, region_name=region_nm)
@@ -20,6 +20,12 @@ def get_subnets(main_file, profile_nm, region_nm, network_type="Private"):
         # Get public subnets
         public_subnets = ec2.describe_subnets(
             Filters=[
+                {
+                    'Name': 'vpc-id',
+                    'Values': [
+                        vpc
+                    ]
+                },
                 {
                     'Name': 'tag:Name',
                     'Values': [
@@ -61,6 +67,12 @@ def get_subnets(main_file, profile_nm, region_nm, network_type="Private"):
         # Get private subnets
         private_subnets = ec2.describe_subnets(
             Filters=[
+                {
+                    'Name': 'vpc-id',
+                    'Values': [
+                        vpc
+                    ]
+                },
                 {
                     'Name': 'tag:Name',
                     'Values': [

@@ -237,10 +237,10 @@ def main():
     # If network type is entered, use it. Else, create as parameter
     if args.network and args.network.lower() == 'public':
         # value_dict["network"] = "Public"
-        value_dict["subnets_public"] = get_subnets(main_file, profile, region, "Public")
+        value_dict["subnets_public"] = get_subnets(vpc, main_file, profile, region, "Public")
     else:
         # value_dict["network"] = "Private"
-        value_dict["subnets_private"] = get_subnets(main_file, profile, region, "Private")
+        value_dict["subnets_private"] = get_subnets(vpc, main_file, profile, region, "Private")
 
     # If role is entered, use it. Else, create as parameter
     if args.role:
