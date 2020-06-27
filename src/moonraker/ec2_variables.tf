@@ -1,9 +1,4 @@
-#---------root/variables.tf-----------
-# Per build
-variable "profile" {}
-
-# Per VPC
-variable "region" {}
+#---------root/ec2_variables.tf-----------
 
 # variable "ami" {
 #     type    = map(string)

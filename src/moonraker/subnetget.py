@@ -11,7 +11,7 @@ def get_subnets(main_file, profile_nm, region_nm, network_type="Private"):
 
     # Initial setup
     session = boto3.Session(profile_name=profile_nm, region_name=region_nm)
-    var_file = "variables.tf"
+    var_file = "ec2_variables.tf"
 
     # Initiate the session
     ec2 = session.client('ec2')

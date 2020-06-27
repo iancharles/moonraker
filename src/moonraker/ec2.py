@@ -90,13 +90,20 @@ def main():
     with open(main_file, 'w') as file:
         file.write(filedata)
 
-    # Create variables file
+    # Create generic variables file
     var_file = Path("variables.tf")
     if not var_file.is_file():
-        var_source_file = resource_filename('moonraker', 'variables.tf')
+        with open(var_file, 'w') as file:
+            file.write('\nvariable "profile" {}')
+            file.write('\nvariable "region" {}')
+
+    # Create EC2 variables file
+    ec2_var_file = Path("ec2_variables.tf")
+    if not ec2_var_file.is_file():
+        var_source_file = resource_filename('moonraker', 'ec2_variables.tf')
         with open(var_source_file, 'r') as file :
             filedata = file.read()
-        with open(var_file, 'w') as file:
+        with open(ec2_var_file, 'w') as file:
             file.write(filedata)
 
     # Create data file
@@ -355,11 +362,11 @@ def main():
         file.write(filedata)  
 
     # Finalize variables file
-    with open(var_file, 'r') as file :
+    with open(ec2_var_file, 'r') as file :
         filedata = file.read()
         # filedata = filedata.replace("BUILD_NO", build_no)
         filedata += vars_list
-    with open(var_file, 'w') as file:
+    with open(ec2_var_file, 'w') as file:
         file.write(filedata)
 
     # Finalize TFVARS file
