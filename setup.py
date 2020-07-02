@@ -7,7 +7,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='moonraker',
-    version='0.1.1',
+    version='0.1.4',
     description='A CLI tool to generate TF',
     long_description=readme,
     long_description_content_type='text/markdown',
@@ -18,7 +18,8 @@ setup(
     install_requires=['boto3'],
     entry_points={
         'console_scripts': [
-            'moonraker=moonraker.ec2:main',
+            'moonraker-ec2=moonraker.ec2:main',
+            'moonraker-s3=moonraker.s3:main',
         ],
     }
 )
