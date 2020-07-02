@@ -3,6 +3,7 @@ moon-lander-vars.tfvars
 moon-lander-output.yml
 .vscode/
 demo/
+demo-2/
 reference/
 Pipfile.lock
 
